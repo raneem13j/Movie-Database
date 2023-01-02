@@ -3,10 +3,17 @@
 const express = require('express')
 const app = express()
 const port = 3000
+// the data array
+const movies = [
+    { title: 'Jaws', year: 1975, rating: 8 },
+    { title: 'Avatar', year: 2009, rating: 7.8 },
+    { title: 'Brazil', year: 1985, rating: 8 },
+    { title: 'الإرهاب والكباب', year: 1992, rating: 6.2 }
+]
 // test command
 app.get('/test', (req, res) => {
   res.send("OK")
-})
+});
 // time command
 let date_ob = new Date();
 // current hours
@@ -20,13 +27,13 @@ let seconds = date_ob.getSeconds();
 
 app.get('/time', (req, res) => {
     res.send({status: 200, message: hours + ":" + minutes + ":" + seconds})
-  })
+  });
 // hello id command
 app.get('/hello/:id', (req, res) => {
     const id = req.params.id;
     res.send({ status: 200, message: `Hello,${id}` });
   });  
-  app.get('/hello', (req, res) => {
+app.get('/hello', (req, res) => {
     const id = req.params.id;
     res.send({ status: 200, message: `Hello` });
   });  
@@ -47,10 +54,24 @@ app.get('/search', (req, res) => {
     });
   }
 });
+// movie / read command
+app.get('/movies/:read', (req, res) => {
+    res.status(200).send({ status: 200, data: movies });
+  });
+// movie / create command
+app.post('/movies/:create', (req, res) => {
+    // Code to handle creating a new movie goes here
+});
+// movie / update command
+app.put('/movies/:update', (req, res) => {
+   // Code to handle updating an existing movie goes here
+  });
+// movie / delete command
+app.delete('/movies/:delete', (req, res) => {
+   // Code to handle deleting a movie goes here
+});
 
 
-
-
-  app.listen(port, () => {
+app.listen(port, () => {
     console.log(`Example app listening on ${port}`)
-  })
+  });
