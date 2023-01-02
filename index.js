@@ -54,10 +54,28 @@ app.get('/search', (req, res) => {
     });
   }
 });
-// movie / read command
+//movie / read command
 app.get('/movies/:read', (req, res) => {
     res.status(200).send({ status: 200, data: movies });
   });
+app.get('/movies/read/by-date', (req, res) => {
+    // Sort movies by date
+    const sortedMovies = movies.sort((a, b) => a.year - b.year);
+    res.send({ status: 200, data: sortedMovies });
+  });
+  
+app.get('/movies/read/by-rating', (req, res) => {
+    // Sort movies by rating
+    const sortedMovies = movies.sort((a, b) => b.rating - a.rating);
+    res.send({ status: 200, data: sortedMovies });
+  });
+  
+app.get('/movies/read/by-title', (req, res) => {
+    // Sort movies by title
+    const sortedMovies = movies.sort((a, b) => a.title.localeCompare(b.title));
+    res.send({ status: 200, data: sortedMovies });
+  });
+
 // movie / create command
 app.post('/movies/:create', (req, res) => {
     // Code to handle creating a new movie goes here
