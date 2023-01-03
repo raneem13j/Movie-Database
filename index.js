@@ -116,9 +116,20 @@ app.get('/movies/add', (req, res) => {
   res.send(movies);
 })
 // movie / update command
-app.get('/movies/update', (req, res) => {
-   res.send("jdfhadkgjf;ah")
- });
+app.get('/movies/update/:id', (req, res) => {
+  const id = req.params.id;
+  const { title, year, rating } = req.query;
+
+  const movie = movies.find(movie => movie.id == id);
+
+  // Update the movie's title and rating
+  if (title) movie.title = title;
+  if (year) movie.year = year;
+  if (rating) movie.rating = rating;
+  
+  res.send(movies);
+});
+
 // movie / delete command
 app.get('/movies/delete/:id', (req, res) => {
   const id = req.params.id;
