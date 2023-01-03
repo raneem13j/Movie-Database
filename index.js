@@ -1,5 +1,6 @@
 //create a server
 
+
 const express = require('express')
 const app = express()
 const port = 3000
@@ -54,10 +55,10 @@ app.get('/search', (req, res) => {
     });
   }
 });
-// // movies / read command
-// app.get('/movies/:read', (req, res) => {
-//     res.status(200).send({ status: 200, data: movies });
-// //   });
+// movies / read command
+app.get('/movies/read', (req, res) => {
+    res.status(200).send({ status: 200, data: movies });
+  });
 //Sort movies by date
 app.get('/movies/read/by-date', (req, res) => {
     const sortedMovies = movies.sort((a, b) => a.year - b.year);
@@ -115,13 +116,29 @@ app.get('/movies/add', (req, res) => {
   res.send(movies);
 })
 // movie / update command
-app.get('/movies/:update', (req, res) => {
+app.get('/movies/update', (req, res) => {
    res.send("jdfhadkgjf;ah")
  });
 // movie / delete command
-app.delete('/movies/:delete', (req, res) => {
-// Code to handle deleting a movie goes here
+app.get('/movies/delete/:id', (req, res) => {
+  const id = req.params.id;
+  // Find the index of the movie with the given ID
+  const movie = movies.find((movie) => movie.id === Number(id));
+
+  if (!movie) {
+    // Movie with the given ID was not found
+    res.status(404).json({
+      status: 404,
+      error: true,
+      message: `The movie ${id} does not exist`,
+    });
+  }else{
+  movies.splice(id-1, 1);
+  res.send(movies);
+  }
 });
+
+
 app.listen(port, () => {
     console.log(`Example app listening on ${port}`)
   });
