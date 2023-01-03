@@ -54,11 +54,11 @@ app.get('/search', (req, res) => {
     });
   }
 });
-//movie / read command
-app.get('/movies/:read', (req, res) => {
-    res.status(200).send({ status: 200, data: movies });
-  });
-// Sort movies by date
+// // movies / read command
+// app.get('/movies/:read', (req, res) => {
+//     res.status(200).send({ status: 200, data: movies });
+// //   });
+//Sort movies by date
 app.get('/movies/read/by-date', (req, res) => {
     const sortedMovies = movies.sort((a, b) => a.year - b.year);
     res.send({ status: 200, data: sortedMovies });
@@ -73,19 +73,8 @@ app.get('/movies/read/by-title', (req, res) => {
     const sortedMovies = movies.sort((a, b) => a.title.localeCompare(b.title));
     res.send({ status: 200, data: sortedMovies });
   });
-// movie / create command
-app.post('/movies/:create', (req, res) => {
-    // Code to handle creating a new movie goes here
-});
-// movie / update command
-app.put('/movies/:update', (req, res) => {
-   // Code to handle updating an existing movie goes here
-  });
-// movie / delete command
-app.delete('/movies/:delete', (req, res) => {
-   // Code to handle deleting a movie goes here
-});
-// Define the route for /movies/read/id/:id
+
+// get movie by id  /movies/read/id/:id
 app.get('/movies/read/id/:id', (req, res) => {
     // Get the movie id from the request parameters
     const id = req.params.id;
@@ -97,10 +86,42 @@ app.get('/movies/read/id/:id', (req, res) => {
     if (movie) {
       res.status(200).json({ status: 200, data: movie });
     } else {
-      // If the movie was not found, send a 404 status code and an error message
-      res.status(404).json({ status: 404, error: true, message: `the movie ${id} does not exist` });
+    // If the movie was not found, send a 404 status code and an error message
+     res.status(404).json({ status: 404, error: true, message: `the movie ${id} does not exist` });
     }
   });
+// movies / create command
+app.get('/movies/add', (req, res) => {
+  const {id, title, year, rating} = req.query
+  const movie = {id: movies[movies.length-1].id + 1,
+                 title, 
+                 year: Number(year), 
+                 rating: rating || 4,};
+  if(!title || !year){
+    res.status(403).json({
+      status: 403,
+      error: true,
+      message: "you cannot create a movie wiyhout providing a title and a year",
+    })
+  
+    }if(isNaN(year), year.length !== 4){
+      res.status(403).json({
+        status: 403,
+        error: true,
+        message: "you cannot create a movie wiyhout providing a title and a year",
+      })
+    }
+  movies.push(movie);
+  res.send(movies);
+})
+// movie / update command
+app.get('/movies/:update', (req, res) => {
+   res.send("jdfhadkgjf;ah")
+ });
+// movie / delete command
+app.delete('/movies/:delete', (req, res) => {
+// Code to handle deleting a movie goes here
+});
 app.listen(port, () => {
     console.log(`Example app listening on ${port}`)
   });
