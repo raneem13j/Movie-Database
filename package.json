@@ -14,9 +14,9 @@
   "author": "raneem aljamal",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.18.2"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.20"
+    "body-parser": "^1.20.1",
+    "express": "^4.18.2",
+    "method-override": "^3.0.0",
+    "mongoose": "^6.8.2"
   }
 }

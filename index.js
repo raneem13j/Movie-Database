@@ -1,19 +1,28 @@
-//create a server
-
-
-const express = require('express')
+//importing packages
+const express = require('express');
 const app = express()
+const hello = require('./routes/hello');
+
+// middlewares
+app.use(express.json());
+
+//port
 const port = 3000
+
 // the data array
 const movies = [
-    {id:1, title: 'Jaws', year: 1975, rating: 8 },
-    {id:2, title: 'Avatar', year: 2009, rating: 7.8 },
-    {id:3, title: 'Brazil', year: 1985, rating: 8 },
-    {id:4, title: 'الإرهاب والكباب', year: 1992, rating: 6.2 }
+  { id: 1, title: 'Jaws', year: 1975, rating: 8 },
+  { id: 2, title: 'Avatar', year: 2009, rating: 7.8 },
+  { id: 3, title: 'Brazil', year: 1985, rating: 8 },
+  { id: 4, title: 'الإرهاب والكباب', year: 1992, rating: 6.2 }
 ]
+
+app.get('/', (req, res) => {
+    res.send("OK")
+  });
 // test command
 app.get('/test', (req, res) => {
-  res.send("OK")
+  res.send("OKkkk")
 });
 // time command
 let date_ob = new Date();
@@ -27,17 +36,17 @@ let minutes = date_ob.getMinutes();
 let seconds = date_ob.getSeconds();
 
 app.get('/time', (req, res) => {
-    res.send({status: 200, message: hours + ":" + minutes + ":" + seconds})
-  });
+  res.send({ status: 200, message: hours + ":" + minutes + ":" + seconds })
+});
 // hello id command
 app.get('/hello/:id', (req, res) => {
-    const id = req.params.id;
-    res.send({ status: 200, message: `Hello,${id}` });
-  });  
+  const id = req.params.id;
+  res.send({ status: 200, message: `Hello,${id}` });
+});
 app.get('/hello', (req, res) => {
-    const id = req.params.id;
-    res.send({ status: 200, message: `Hello` });
-  });  
+  const id = req.params.id;
+  res.send({ status: 200, message: `Hello` });
+});
 // search  command
 app.get('/search', (req, res) => {
   const search = req.query.s;
@@ -57,66 +66,68 @@ app.get('/search', (req, res) => {
 });
 // movies / read command
 app.get('/movies/read', (req, res) => {
-    res.status(200).send({ status: 200, data: movies });
-  });
+  res.status(200).send({ status: 200, data: movies });
+});
 //Sort movies by date
 app.get('/movies/read/by-date', (req, res) => {
-    const sortedMovies = movies.sort((a, b) => a.year - b.year);
-    res.send({ status: 200, data: sortedMovies });
-  });
+  const sortedMovies = movies.sort((a, b) => a.year - b.year);
+  res.send({ status: 200, data: sortedMovies });
+});
 // Sort movies by rating 
 app.get('/movies/read/by-rating', (req, res) => {
-    const sortedMovies = movies.sort((a, b) => b.rating - a.rating);
-    res.send({ status: 200, data: sortedMovies });
-  });
+  const sortedMovies = movies.sort((a, b) => b.rating - a.rating);
+  res.send({ status: 200, data: sortedMovies });
+});
 // Sort movies by title  
 app.get('/movies/read/by-title', (req, res) => {
-    const sortedMovies = movies.sort((a, b) => a.title.localeCompare(b.title));
-    res.send({ status: 200, data: sortedMovies });
-  });
+  const sortedMovies = movies.sort((a, b) => a.title.localeCompare(b.title));
+  res.send({ status: 200, data: sortedMovies });
+});
 
 // get movie by id  /movies/read/id/:id
 app.get('/movies/read/id/:id', (req, res) => {
-    // Get the movie id from the request parameters
-    const id = req.params.id;
-  
-    // Find the movie with the given id
-    const movie = movies.find(movie => movie.id === Number(id));
-  
-    // If the movie was found, send a 200 status code and the movie data
-    if (movie) {
-      res.status(200).json({ status: 200, data: movie });
-    } else {
+  // Get the movie id from the request parameters
+  const id = req.params.id;
+
+  // Find the movie with the given id
+  const movie = movies.find(movie => movie.id === Number(id));
+
+  // If the movie was found, send a 200 status code and the movie data
+  if (movie) {
+    res.status(200).json({ status: 200, data: movie });
+  } else {
     // If the movie was not found, send a 404 status code and an error message
-     res.status(404).json({ status: 404, error: true, message: `the movie ${id} does not exist` });
-    }
-  });
+    res.status(404).json({ status: 404, error: true, message: `the movie ${id} does not exist` });
+  }
+});
 // movies / create command
-app.get('/movies/add', (req, res) => {
-  const {id, title, year, rating} = req.query
-  const movie = {id: movies[movies.length-1].id + 1,
-                 title, 
-                 year: Number(year), 
-                 rating: rating || 4,};
-  if(!title || !year){
+app.post('/movies/add', (req, res) => {
+  const { id, title, year, rating } = req.query
+  const movie = {
+    id: movies[movies.length - 1].id + 1,
+    title,
+    year: Number(year),
+    rating: rating || 4,
+  };
+  if (!title || !year) {
     res.status(403).json({
       status: 403,
       error: true,
       message: "you cannot create a movie wiyhout providing a title and a year",
     })
-  
-    }if(isNaN(year), year.length !== 4){
-      res.status(403).json({
-        status: 403,
-        error: true,
-        message: "you cannot create a movie wiyhout providing a title and a year",
-      })
-    }
+
+  } if (isNaN(year), year.length !== 4) {
+    res.status(403).json({
+      status: 403,
+      error: true,
+      message: "you cannot create a movie wiyhout providing a title and a year",
+    })
+  }
   movies.push(movie);
   res.send(movies);
 })
 // movie / update command
-app.get('/movies/update/:id', (req, res) => {
+app.patch('/movies/update/:id', (req, res) => {
   const id = req.params.id;
   const { title, year, rating } = req.query;
 
@@ -126,12 +137,12 @@ app.get('/movies/update/:id', (req, res) => {
   if (title) movie.title = title;
   if (year) movie.year = year;
   if (rating) movie.rating = rating;
-  
+
   res.send(movies);
 });
 
 // movie / delete command
-app.get('/movies/delete/:id', (req, res) => {
+app.delete('/movies/delete/:id', (req, res) => {
   const id = req.params.id;
   // Find the index of the movie with the given ID
   const movie = movies.find((movie) => movie.id === Number(id));
@@ -143,13 +154,17 @@ app.get('/movies/delete/:id', (req, res) => {
       error: true,
       message: `The movie ${id} does not exist`,
     });
-  }else{
-  movies.splice(id-1, 1);
-  res.send(movies);
+  } else {
+    movies.splice(id - 1, 1);
+    res.send(movies);
   }
 });
+
+app.use((req, res, next) => {
+  res.status(404).send("Sorry can't find that!")
+})
 
 
 app.listen(port, () => {
     console.log(`Example app listening on ${port}`)
-  });
+});
