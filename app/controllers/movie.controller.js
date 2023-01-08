@@ -64,6 +64,59 @@ exports.findOne = (req, res) => {
         .send({ message: "Error retrieving Movie with id=" + id });
     });
 };
+//put the list in order by title
+exports.orderByTitle = (req, res) => {
+  const title = req.query.title;
+  var condition = title ? { title: { $regex: new RegExp(title), $options: "i" } } : {};
+  
+  Movie.find(condition)
+    .then(movies => {
+      // sort the movies by title
+      const sortedMovies = movies.sort((a, b) => a.title.localeCompare(b.title));
+      
+      // send the sorted movies back to the client
+      res.send(sortedMovies);
+    })
+    .catch(error => {
+       res.send({message: 'error'});
+    });
+};
+
+//put the list in order by date
+exports.orderByDate = (req, res) => {
+  const year = req.query.year;
+  var condition = year ? { year: { $regex: new RegExp(year), $options: "i" } } : {};
+  
+  Movie.find(condition)
+    .then(movies => {
+      // sort the movies by title
+      const sortedMovies = movies.sort((a, b) => a.year.localeCompare(b.year));
+      
+      // send the sorted movies back to the client
+      res.send(sortedMovies);
+    })
+    .catch(error => {
+       res.send({message: 'error'});
+    });
+};
+
+//put the list in order by rating
+exports.orderByRating = (req, res) => {
+  const rating = req.query.rating;
+  var condition = rating ? { rating: { $regex: new RegExp(rating), $options: "i" } } : {};
+  
+  Movie.find(condition)
+    .then(movies => {
+      // sort the movies by title
+      const sortedMovies = movies.sort((a, b) => b.rating - a.rating);
+      
+      // send the sorted movies back to the client
+      res.send(sortedMovies);
+    })
+    .catch(error => {
+       res.send({message: 'error'});
+    });
+};
 
 // Update a Movie by the id in the request
 exports.update = (req, res) => {
