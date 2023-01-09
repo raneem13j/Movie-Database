@@ -28,5 +28,5 @@ module.exports = app => {
       res.status(404).send("Sorry can't find that!")
     });
   
-    app.use('/api/movies', router);
+    app.use('/movies', router);
   };
